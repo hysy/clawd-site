@@ -2,12 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>clawd-site</title>
+    <meta name="description" content="Clawd, the little block-character companion from Claude Code, in every mood it has." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='3' y='2' width='10' height='9' rx='1' fill='%23D97757'/%3E%3Crect x='5' y='4' width='2' height='2' fill='%23111'/%3E%3Crect x='9' y='4' width='2' height='2' fill='%23111'/%3E%3Crect x='4' y='12' width='2' height='2' fill='%23D97757'/%3E%3Crect x='10' y='12' width='2' height='2' fill='%23D97757'/%3E%3C/svg%3E" />
+    <title>Clawd</title>
   </head>
   <body>
-    <div id="app"></div>
+    <header class="top">
+      <h1>Clawd</h1>
+      <div class="controls">
+        <label>costume
+          <select id="costume"></select>
+        </label>
+        <button id="random" type="button">random</button>
+        <button id="gallery-toggle" type="button">gallery</button>
+        <label>speed
+          <select id="speed">
+            <option value="1000">slow</option>
+            <option value="500" selected>normal</option>
+            <option value="250">fast</option>
+          </select>
+        </label>
+      </div>
+    </header>
+    <main>
+      <section id="stage" class="stage" aria-label="Clawd in every state"></section>
+      <p class="hint">click a Clawd to see another move</p>
+      <section id="gallery" class="gallery" hidden aria-label="Costumes"></section>
+    </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
