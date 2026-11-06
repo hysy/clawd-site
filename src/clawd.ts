@@ -148,6 +148,28 @@ export const COSTUMES: Record<string, Costume> = {
   mustache: { hat: BLANK, color: 'gray', face: '~▐▛▀▀▀▜▌~' },
   googly: { hat: BLANK, color: 'gray', face: ' ▐O███O▌ ' },
   dizzy: { hat: '   @ @   ', color: 'yellow', face: ' ▐x███x▌ ' },
+  // the new batch
+  helmet: { hat: '  ▄███▄  ', color: '#9AA0A6' },
+  antlers: { hat: ' ╲╱   ╲╱ ', color: '#A0522D' },
+  snow: { hat: ' * . * . ', color: 'white', alt: '. * . * .' },
+  rain: { hat: '  ╱ ╱ ╱  ', color: 'cyan', alt: ' ╱ ╱ ╱   ' },
+  cloud: { hat: '  ▄▀▀▀▄  ', color: 'white' },
+  balloon: { hat: '    ○    ', color: 'red', alt: '   ○     ' },
+  turban: { hat: '  ▟█▓█▙  ', color: '#D2A060' },
+  detective: { hat: ' ▄▟███▙▄ ', color: '#6B4F2A' },
+  pumpkin: { hat: '  ▗▟█▙▖  ', color: '#FF8C00' },
+  shark: { hat: '    ◢    ', color: 'gray', alt: '   ◢     ' },
+  rocket: { hat: '   ▟▲▙   ', color: 'red', alt: '   ▟▲▙ ✦ ' },
+  ribbon: { hat: '  ──▲──  ', color: 'magenta' },
+  leaf: { hat: '    ❧    ', color: 'green' },
+  gem: { hat: '    ◆    ', color: 'cyan', alt: '    ◇    ' },
+  sushi: { hat: '  ▐▀▀▀▌  ', color: 'white' },
+  robot: { hat: '    ╿    ', color: 'cyan', face: ' ▐■███■▌ ' },
+  wink: { hat: BLANK, color: 'gray', face: ' ▐▬███▜▌ ' },
+  sleepy: { hat: BLANK, color: 'gray', face: ' ▐▬███▬▌ ' },
+  angry: { hat: BLANK, color: 'gray', face: ' ▐▟███▙▌ ' },
+  eyepatch: { hat: BLANK, color: 'gray', face: ' ▐▛███■▌ ' },
+  ghost: { hat: '  ▂▂▂▂▂  ', color: 'white', face: ' ▐○███○▌ ' },
 }
 
 export const COSTUME_NAMES = Object.keys(COSTUMES)
@@ -517,6 +539,51 @@ const THINKING: Pose[][] = [
   cartwheel('...'),
   // juggling ideas
   juggle('○●◎'),
+  // reading, page by page
+  [
+    { mark: at(1, '▬▬'), arms: WAVE_L, body: LOOK_L },
+    { mark: at(1, '▬▬'), arms: WAVE_L, body: LOOK_L },
+    { mark: at(1, '▬▬'), arms: WAVE_L, body: BODY },
+    { mark: at(2, '▬▬'), arms: WAVE_L, body: LOOK_L },
+    { mark: at(2, '▬▬'), arms: WAVE_L, body: BODY_BLINK },
+    { mark: at(1, '▬▬'), arms: WAVE_L, body: LOOK_L },
+  ],
+  // scratching its head
+  [
+    { mark: at(6, '?'), arms: WAVE_R, body: LOOK_R },
+    { mark: at(6, '?'), arms: ARMS_UP, body: LOOK_R },
+    { mark: at(6, '?'), arms: WAVE_R, body: LOOK_R },
+    { mark: at(6, '??'), arms: ARMS_UP, body: BODY },
+    { mark: at(6, '??'), arms: WAVE_R, body: LOOK_L },
+    { mark: mid('...'), arms: ARMS, body: BODY_BLINK },
+  ],
+  // counting on fingers
+  [
+    { mark: at(1, '1'), arms: WAVE_L },
+    { mark: at(1, '1 2'), arms: WAVE_R },
+    { mark: at(1, '1 2 3'), arms: WAVE_L },
+    { mark: at(1, '1 2 3 4'), arms: WAVE_R },
+    { mark: at(1, '1 2 3 4?'), arms: ARMS_UP, body: LOOK_L },
+    { mark: mid('...'), body: BODY_BLINK },
+  ],
+  // a thought bubble that will not settle
+  [
+    { mark: at(5, 'o'), body: LOOK_R },
+    { mark: at(5, 'O'), body: LOOK_R },
+    { mark: at(4, '(  )'), body: LOOK_R },
+    { mark: at(4, '( ?)'), body: LOOK_R },
+    { mark: at(4, '(! )'), body: HAPPY },
+    { mark: at(4, '(  )'), body: BODY_BLINK },
+  ],
+  // sitting down to think it through
+  [
+    { pos: 'crouch', mark: mid('...'), body: LOOK_L },
+    { pos: 'crouch', mark: mid('...'), body: LOOK_L },
+    { pos: 'crouch', mark: mid(' ..'), body: BODY },
+    { pos: 'crouch', mark: mid('  .'), body: LOOK_R },
+    { pos: 'crouch', mark: mid('...'), body: LOOK_R },
+    { mark: mid('!'), arms: ARMS_UP, body: HAPPY },
+  ],
 ]
 
 const TOOLS: Record<string, Pose[]> = {
@@ -606,6 +673,47 @@ const WAITING: Pose[][] = [
   approach('!'),
   // blinking in and out to catch your eye
   teleport('?'),
+  // knocking
+  [
+    { mark: at(4, 'knock'), arms: WAVE_R },
+    { mark: at(4, 'knock'), arms: ARMS },
+    { mark: at(4, 'knock'), arms: WAVE_R },
+    { mark: BLANK, arms: ARMS, body: LOOK_R },
+    { mark: BLANK, arms: ARMS, body: LOOK_R },
+    { mark: mid('?'), arms: ARMS, body: BODY },
+  ],
+  // holding up a sign
+  [
+    { mark: at(2, '[ ? ]'), arms: ARMS_UP },
+    { mark: at(2, '[ ? ]'), arms: ARMS_UP },
+    { mark: at(2, '[ ! ]'), arms: ARMS_UP, pos: 'air' },
+    { mark: at(2, '[ ! ]'), arms: ARMS_UP },
+  ],
+  // checking the time
+  [
+    { mark: at(1, '◷'), arms: WAVE_L, body: LOOK_L },
+    { mark: at(1, '◶'), arms: WAVE_L, body: LOOK_L },
+    { mark: at(1, '◵'), arms: WAVE_L, body: LOOK_L },
+    { mark: at(1, '◴'), arms: WAVE_L, body: LOOK_L },
+    { mark: mid('...'), arms: ARMS, body: BODY_BLINK, legs: LEGS_TAP },
+    { mark: mid('?'), arms: ARMS, body: BODY, legs: LEGS },
+  ],
+  // peeking round the edge
+  [
+    { dx: -4, body: LOOK_R, mark: BLANK },
+    { dx: -3, body: LOOK_R, mark: at(5, '?') },
+    { dx: -3, body: LOOK_R, mark: at(5, '?') },
+    { dx: -4, body: LOOK_R, mark: BLANK },
+    { dx: -5, mark: BLANK },
+    { dx: -5, mark: BLANK },
+  ],
+  // tugging at your sleeve
+  [
+    { dx: 1, mark: at(7, '!'), arms: WAVE_R },
+    { dx: 2, mark: at(7, '!'), arms: WAVE_R, legs: LEGS_STEP },
+    { dx: 2, mark: at(7, '!'), arms: ARMS_UP },
+    { dx: 1, mark: at(6, '!!'), arms: WAVE_R, legs: LEGS_STEP },
+  ],
 ]
 
 const DONE: Pose[][] = [
@@ -656,6 +764,51 @@ const DONE: Pose[][] = [
   dizzy(),
   // moonwalking
   moonwalk(),
+  // a bow
+  [
+    { mark: mid('✓'), arms: ARMS_UP, body: HAPPY },
+    { mark: mid('✓'), arms: ARMS, body: HAPPY },
+    { pos: 'crouch', mark: mid('✓'), body: HAPPY },
+    { pos: 'crouch', mark: mid('✓'), body: BODY_BLINK },
+    { pos: 'crouch', mark: mid('✓'), body: HAPPY },
+    { mark: mid('✓'), arms: WAVE_R, body: HAPPY },
+  ],
+  // confetti
+  [
+    { mark: at(1, '* . * .'), arms: ARMS_UP, body: HAPPY },
+    { mark: at(2, '. * . *'), arms: ARMS_UP, body: HAPPY, pos: 'air' },
+    { mark: at(1, '. * . *'), arms: ARMS_UP, body: HAPPY },
+    { mark: at(2, '* . * .'), arms: WAVE_L, body: HAPPY },
+    { mark: at(1, '* . * .'), arms: WAVE_R, body: HAPPY },
+    { mark: mid('✓'), arms: ARMS_UP, body: HAPPY, pos: 'air' },
+  ],
+  // a high five
+  [
+    { mark: at(7, '✓'), arms: WAVE_R, body: HAPPY, dx: 1 },
+    { mark: at(7, '✓'), arms: WAVE_R, body: HAPPY, dx: 2 },
+    { mark: at(6, '*✓'), arms: WAVE_R, body: HAPPY, dx: 3, pos: 'air' },
+    { mark: at(7, '✓'), arms: WAVE_R, body: HAPPY, dx: 2 },
+    { mark: mid('✓'), arms: ARMS_UP, body: HAPPY, dx: 1 },
+    { mark: mid('✓'), arms: ARMS, body: HAPPY },
+  ],
+  // a victory sprint on the spot
+  [
+    { mark: at(2, '✓ »'), body: HAPPY, legs: LEGS_STEP, arms: WAVE_L },
+    { mark: at(2, '✓ »»'), body: HAPPY, legs: LEGS, arms: WAVE_R },
+    { mark: at(2, '✓ »»»'), body: HAPPY, legs: LEGS_STEP, arms: WAVE_L },
+    { mark: at(2, '✓'), body: HAPPY, legs: LEGS, arms: ARMS_UP, pos: 'air' },
+  ],
+  // a quick nap, job done
+  [
+    { mark: mid('✓'), body: HAPPY, arms: ARMS_UP },
+    { mark: mid('✓'), body: HAPPY },
+    { mark: at(5, 'z'), body: BODY_BLINK, pos: 'crouch' },
+    { mark: at(6, 'Z'), body: BODY_BLINK, pos: 'crouch' },
+    { mark: at(5, 'z'), body: BODY_BLINK, pos: 'crouch' },
+    { mark: at(6, 'Z'), body: BODY_BLINK, pos: 'crouch' },
+    { mark: mid('!'), body: HAPPY, arms: ARMS_UP },
+    { mark: mid('✓'), body: HAPPY },
+  ],
 ]
 
 const ERROR: Pose[][] = [
@@ -691,6 +844,44 @@ const ERROR: Pose[][] = [
   ],
   // tripping flat on its face
   splat(),
+  // a rain cloud overhead
+  [
+    { mark: at(2, '▄▀▀▀▄'), body: SAD },
+    { mark: at(2, '╷ ╷ ╷'), body: SAD },
+    { mark: at(2, '▄▀▀▀▄'), body: SAD, legs: LEGS_STEP },
+    { mark: at(2, ' ╷ ╷ '), body: SAD },
+    { mark: mid('✗'), body: SAD, pos: 'crouch' },
+    { mark: mid('✗'), body: SAD, pos: 'crouch' },
+  ],
+  // head in hands
+  [
+    { mark: mid('✗'), body: SAD, arms: ARMS_UP },
+    { mark: mid('✗'), body: BODY_BLINK, arms: ARMS_UP },
+    { mark: mid('...'), body: BODY_BLINK, arms: ARMS_UP, pos: 'crouch' },
+    { mark: mid('...'), body: BODY_BLINK, arms: ARMS_UP, pos: 'crouch' },
+    { mark: mid('✗'), body: SAD, arms: ARMS, pos: 'crouch' },
+    { mark: mid('✗'), body: SAD, arms: ARMS },
+  ],
+  // keeling over backwards
+  [
+    { mark: mid('✗'), body: BODY_BLINK },
+    { mark: mid('!'), body: BODY_BLINK, arms: ARMS_UP, dx: -1 },
+    { mark: mid('!'), body: BODY_BLINK, arms: ARMS_UP, pos: 'air', dx: -2 },
+    { pos: 'flip', bare: true, mark: BLANK, dx: -2, dy: 1 },
+    { pos: 'flip', bare: true, mark: mid('✗'), dx: -2, dy: 1 },
+    { pos: 'flip', bare: true, mark: mid('✗'), dx: -2, dy: 1 },
+    { pos: 'crouch', body: SAD, mark: mid('...'), dx: -1 },
+    { body: SAD, mark: mid('✗') },
+  ],
+  // a bug crawls past
+  [
+    { mark: at(0, '•'), body: LOOK_L },
+    { mark: at(2, '•'), body: LOOK_L },
+    { mark: at(4, '•'), body: BODY_BLINK, pos: 'air', arms: ARMS_UP },
+    { mark: at(6, '•'), body: LOOK_R, arms: ARMS_UP },
+    { mark: at(8, '•'), body: LOOK_R },
+    { mark: mid('✗'), body: SAD },
+  ],
 ]
 
 // Short moves an idle Clawd makes between naps.
@@ -734,6 +925,51 @@ const FIDGETS: Pose[][] = [
   wander(),
   // juggling
   juggle('·o·'),
+  // push-ups
+  [
+    { pos: 'crouch', arms: ARMS_UP },
+    { pos: 'crouch', arms: ARMS },
+    { pos: 'crouch', arms: ARMS_UP },
+    { pos: 'crouch', arms: ARMS },
+    { arms: ARMS_UP, mark: mid('~') },
+    { mark: BLANK },
+  ],
+  // whistling
+  [
+    { mark: at(5, '♪'), body: LOOK_R },
+    { mark: at(6, '♫'), body: LOOK_R },
+    { mark: at(5, '♪ ♫'), body: BODY },
+    { mark: at(2, '♫'), body: LOOK_L },
+    { mark: at(1, '♪'), body: LOOK_L },
+    { mark: BLANK, body: BODY_BLINK },
+  ],
+  // a little dance
+  [
+    { arms: WAVE_L, dx: -1, legs: LEGS_STEP },
+    { arms: ARMS_UP, body: HAPPY },
+    { arms: WAVE_R, dx: 1, legs: LEGS_STEP },
+    { arms: ARMS_UP, body: HAPPY },
+    { arms: WAVE_L, dx: -1, legs: LEGS_STEP },
+    { arms: ARMS_UP, body: HAPPY, mark: mid('♪') },
+  ],
+  // squinting at something far off
+  [
+    { body: LOOK_R, arms: WAVE_R, mark: at(7, '.') },
+    { body: LOOK_R, arms: WAVE_R, mark: at(7, '.') },
+    { body: LOOK_R, arms: WAVE_R, mark: at(6, '..') },
+    { body: BODY, arms: ARMS, mark: mid('?') },
+    { body: BODY_BLINK, arms: ARMS, mark: BLANK },
+    { body: LOOK_L, arms: ARMS, mark: BLANK },
+  ],
+  // a big stretch and a sit-down
+  [
+    { arms: ARMS_UP, mark: mid('~') },
+    { arms: ARMS_UP, mark: mid('~~'), pos: 'air' },
+    { arms: ARMS_UP, mark: mid('~') },
+    { pos: 'crouch', mark: BLANK },
+    { pos: 'crouch', mark: BLANK, body: BODY_BLINK },
+    { pos: 'crouch', mark: mid('.') },
+  ],
 ]
 
 // Idle sleeps 16s then fidgets for 7s, each cycle picking another fidget.
@@ -774,7 +1010,10 @@ export function offset(state: ClawdState, tick: number, detail = '', seed = 0): 
 }
 
 // Five rows: a mark, then Clawd's body with the costume's hat above it.
-export function dressed(state: ClawdState, tick: number, costume: string, detail = '', seed = 0): string[] {
+// Rewrites the arms and legs rows before the figure is placed, so items in the hands and shoes on the feet move with it.
+export type Trim = { arms?: (row: string) => string; legs?: (row: string) => string }
+
+export function dressed(state: ClawdState, tick: number, costume: string, detail = '', seed = 0, trim?: Trim): string[] {
   const c = COSTUMES[costume] ?? COSTUMES.none
   const p = pose(state, tick, detail, seed)
   const hat = p.noHat ? BLANK : c.alt !== undefined && tick % 2 === 1 ? c.alt : c.hat
@@ -782,7 +1021,23 @@ export function dressed(state: ClawdState, tick: number, costume: string, detail
   const { rows, at: i } = layout(p)
   if (p.pos === 'flip') return place([...rows, hat], p)
   const body = c.face !== undefined && !p.bare && rows[i] !== BODY_BLINK ? c.face : rows[i]
-  return place([...rows.slice(0, i), hat, body, ...rows.slice(i + 1)], p)
+  const out = [...rows.slice(0, i), hat, body, ...rows.slice(i + 1)]
+  if (trim !== undefined && !p.bare) {
+    if (trim.arms !== undefined) out[i + 2] = trim.arms(out[i + 2] ?? BLANK)
+    if (trim.legs !== undefined && p.pos === undefined) out[i + 3] = trim.legs(out[i + 3] ?? BLANK)
+  }
+  return place(out, p)
+}
+
+// Where the arms and legs rows land in dressed(): -1 when that row is not drawn or is off the edge.
+// Items and shoes are only worn facing front, standing, crouching or in the air.
+export function gearRows(state: ClawdState, tick: number, detail = '', seed = 0): { arms: number; legs: number } {
+  const p = pose(state, tick, detail, seed)
+  if (p.sprite !== undefined || p.bare || p.pos === 'flip') return { arms: -1, legs: -1 }
+  const at = p.pos === 'crouch' ? 2 : 1
+  const dy = p.dy ?? 0
+  const row = (n: number) => (n >= 0 && n < 5 ? n : -1)
+  return { arms: row(at + 2 + dy), legs: p.pos === undefined ? row(at + 3 + dy) : -1 }
 }
 
 // The row of dressed() that holds the hat, drawn in the costume's color.
