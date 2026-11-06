@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A random Clawd: a random mood, move and outfit, rerolled every few seconds." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='3' y='2' width='10' height='9' rx='1' fill='%23D97757'/%3E%3Crect x='5' y='4' width='2' height='2' fill='%23111'/%3E%3Crect x='9' y='4' width='2' height='2' fill='%23111'/%3E%3Crect x='4' y='12' width='2' height='2' fill='%23D97757'/%3E%3Crect x='10' y='12' width='2' height='2' fill='%23D97757'/%3E%3C/svg%3E" />
+    <title>Clawd · random</title>
+  </head>
+  <body class="random-page">
+    <header class="top">
+      <h1>Clawd</h1>
+      <nav class="nav"><a href="/">all states</a></nav>
+      <div class="controls">
+        <button id="reroll" type="button">reroll</button>
+        <label><input id="auto" type="checkbox" checked /> auto every
+          <select id="every">
+            <option value="4000">4s</option>
+            <option value="8000" selected>8s</option>
+            <option value="15000">15s</option>
+          </select>
+        </label>
+      </div>
+    </header>
+    <main class="solo">
+      <section id="solo" class="solo-card" aria-live="polite"></section>
+      <p class="hint">click Clawd or press space to reroll</p>
+      <section id="crowd" class="crowd" aria-label="More random Clawds"></section>
+    </main>
+    <script type="module" src="/src/random.ts"></script>
+  </body>
+</html>

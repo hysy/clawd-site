@@ -10,11 +10,18 @@
   <body>
     <header class="top">
       <h1>Clawd</h1>
+      <nav class="nav"><a href="/random">random</a></nav>
       <div class="controls">
-        <label>costume
+        <label>hat
           <select id="costume"></select>
         </label>
-        <button id="random" type="button">random</button>
+        <label>item
+          <select id="item"></select>
+        </label>
+        <label>shoes
+          <select id="shoes"></select>
+        </label>
+        <button id="random" type="button">random outfit</button>
         <button id="gallery-toggle" type="button">gallery</button>
         <label>speed
           <select id="speed">
@@ -27,7 +34,7 @@
     </header>
     <main>
       <section id="stage" class="stage" aria-label="Clawd in every state"></section>
-      <p class="hint">click a Clawd to see another move</p>
+      <p class="hint">click a Clawd to see another move · <span id="counts"></span></p>
       <section id="gallery" class="gallery" hidden aria-label="Costumes"></section>
     </main>
     <script type="module" src="/src/main.ts"></script>

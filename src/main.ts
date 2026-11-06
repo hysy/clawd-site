@@ -1,16 +1,8 @@
 import './style.css'
-import {
-  COLORS,
-  COSTUMES,
-  COSTUME_NAMES,
-  LABELS,
-  TOOL_KINDS,
-  dressed,
-  hatRow,
-  offset,
-  portrait,
-  variants,
-} from './clawd'
+import { COLORS, COSTUMES, COSTUME_NAMES, LABELS, TOOL_KINDS, portrait, variants } from './clawd'
+import { ITEM_NAMES, SHOE_NAMES, WEARABLE, isOutfit, randomOutfit } from './outfit'
+import type { Outfit } from './outfit'
+import { ClawdView, css } from './render'
 import type { ClawdState } from './types'
 
 const STATES: ClawdState[] = ['idle', 'thinking', 'tool', 'waiting', 'done', 'error']
@@ -27,35 +19,43 @@ const TOOL_SAMPLE: Record<string, string> = {
   gear: 'Other',
 }
 
-// Terminal color names as the mod uses them, in a palette that reads on this page.
-const TERM: Record<string, string> = {
-  gray: '#8a8f98',
-  yellow: '#e5c07b',
-  green: '#98c379',
-  red: '#e06c75',
-  magenta: '#c678dd',
-  blue: '#61afef',
-  cyan: '#56b6c2',
-  white: '#e6e6e6',
+const STORAGE = 'clawd-outfit'
+
+function loadOutfit(): Outfit {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE) ?? 'null')
+    if (isOutfit(saved)) return saved
+  } catch {
+    // nothing saved, or not ours
+  }
+  return randomOutfit()
 }
-const css = (c: string) => TERM[c] ?? c
 
-const WEARABLE = COSTUME_NAMES.filter(n => n !== 'none')
-const randomCostume = () => WEARABLE[Math.floor(Math.random() * WEARABLE.length)]
+function saveOutfit(o: Outfit) {
+  try {
+    localStorage.setItem(STORAGE, JSON.stringify(o))
+  } catch {
+    // private window or storage off; the outfit still shows
+  }
+}
 
-type Card = { state: ClawdState; seed: number; rows: HTMLSpanElement[]; variant: HTMLElement; root: HTMLElement }
+type Card = { state: ClawdState; seed: number; view: ClawdView; variant: HTMLElement }
 
 let tick = 0
-let costume = randomCostume()
+let outfit = loadOutfit()
 let interval = 500
 let timer = 0
 
-const stage = document.querySelector<HTMLElement>('#stage')!
-const gallery = document.querySelector<HTMLElement>('#gallery')!
-const costumeSelect = document.querySelector<HTMLSelectElement>('#costume')!
-const randomButton = document.querySelector<HTMLButtonElement>('#random')!
-const galleryToggle = document.querySelector<HTMLButtonElement>('#gallery-toggle')!
-const speedSelect = document.querySelector<HTMLSelectElement>('#speed')!
+const $ = <T extends Element>(sel: string) => document.querySelector<T>(sel)!
+const stage = $<HTMLElement>('#stage')
+const gallery = $<HTMLElement>('#gallery')
+const costumeSelect = $<HTMLSelectElement>('#costume')
+const itemSelect = $<HTMLSelectElement>('#item')
+const shoesSelect = $<HTMLSelectElement>('#shoes')
+const randomButton = $<HTMLButtonElement>('#random')
+const galleryToggle = $<HTMLButtonElement>('#gallery-toggle')
+const speedSelect = $<HTMLSelectElement>('#speed')
+const counts = $<HTMLElement>('#counts')
 
 function detailOf(c: Card): string {
   return c.state === 'tool' ? TOOL_SAMPLE[TOOL_KINDS[c.seed % TOOL_KINDS.length]] ?? 'Other' : ''
@@ -70,20 +70,15 @@ function makeCard(state: ClawdState): Card {
   const root = document.createElement('article')
   root.className = `card ${state}`
   root.title = 'click for another move'
-  const pre = document.createElement('pre')
-  const rows = Array.from({ length: 5 }, () => {
-    const span = document.createElement('span')
-    pre.append(span, '\n')
-    return span
-  })
+  const view = new ClawdView()
   const label = document.createElement('div')
   label.className = 'label'
   label.style.color = css(COLORS[state])
   label.textContent = LABELS[state]
   const variant = document.createElement('div')
   variant.className = 'variant'
-  root.append(pre, label, variant)
-  const card: Card = { state, seed: Math.floor(Math.random() * 16), rows, variant, root }
+  root.append(view.el, label, variant)
+  const card: Card = { state, seed: Math.floor(Math.random() * 16), view, variant }
   root.addEventListener('click', () => {
     card.seed += 1
     draw(card)
@@ -93,16 +88,7 @@ function makeCard(state: ClawdState): Card {
 }
 
 function draw(c: Card) {
-  const detail = detailOf(c)
-  const pad = ' '.repeat(offset(c.state, tick, detail, c.seed))
-  const hat = hatRow(c.state, tick, detail, c.seed)
-  const hatColor = css((COSTUMES[costume] ?? COSTUMES.none).color)
-  const color = css(COLORS[c.state])
-  dressed(c.state, tick, costume, detail, c.seed).forEach((row, i) => {
-    const span = c.rows[i]
-    span.textContent = pad + row
-    span.style.color = i === hat ? hatColor : color
-  })
+  c.view.draw(c.state, tick, outfit, detailOf(c), c.seed)
   c.variant.textContent = caption(c)
 }
 
@@ -123,7 +109,7 @@ const portraits = WEARABLE.map(name => {
   label.className = 'name'
   label.textContent = name
   button.append(pre, label)
-  button.addEventListener('click', () => setCostume(name))
+  button.addEventListener('click', () => setOutfit({ ...outfit, costume: name }))
   gallery.append(button)
   return { name, button, hat, face }
 })
@@ -134,35 +120,44 @@ function drawGallery() {
     const [hat, face] = portrait(p.name, tick)
     p.hat.textContent = hat
     p.face.textContent = face
-    p.button.setAttribute('aria-pressed', String(p.name === costume))
+    p.button.setAttribute('aria-pressed', String(p.name === outfit.costume))
   }
 }
 
-function setCostume(name: string) {
-  costume = name
-  costumeSelect.value = name
+function fill(select: HTMLSelectElement, names: string[]) {
+  for (const name of names) {
+    const option = document.createElement('option')
+    option.value = name
+    option.textContent = name
+    select.append(option)
+  }
+}
+
+function setOutfit(next: Outfit) {
+  outfit = next
+  saveOutfit(outfit)
+  costumeSelect.value = outfit.costume
+  itemSelect.value = outfit.item
+  shoesSelect.value = outfit.shoes
   cards.forEach(draw)
   drawGallery()
 }
 
-for (const name of COSTUME_NAMES) {
-  const option = document.createElement('option')
-  option.value = name
-  option.textContent = name
-  costumeSelect.append(option)
-}
-costumeSelect.value = costume
-costumeSelect.addEventListener('change', () => setCostume(costumeSelect.value))
-randomButton.addEventListener('click', () => {
-  let next = randomCostume()
-  while (next === costume && WEARABLE.length > 1) next = randomCostume()
-  setCostume(next)
-})
+fill(costumeSelect, COSTUME_NAMES)
+fill(itemSelect, ITEM_NAMES)
+fill(shoesSelect, SHOE_NAMES)
+costumeSelect.addEventListener('change', () => setOutfit({ ...outfit, costume: costumeSelect.value }))
+itemSelect.addEventListener('change', () => setOutfit({ ...outfit, item: itemSelect.value }))
+shoesSelect.addEventListener('change', () => setOutfit({ ...outfit, shoes: shoesSelect.value }))
+randomButton.addEventListener('click', () => setOutfit(randomOutfit()))
 galleryToggle.addEventListener('click', () => {
   gallery.hidden = !gallery.hidden
   galleryToggle.setAttribute('aria-pressed', String(!gallery.hidden))
   drawGallery()
 })
+
+const moves = STATES.reduce((n, s) => n + variants(s), 0)
+counts.textContent = `${moves} moves · ${WEARABLE.length} hats · ${ITEM_NAMES.length - 1} items · ${SHOE_NAMES.length - 1} shoes`
 
 function step() {
   tick += 1
@@ -180,5 +175,5 @@ speedSelect.addEventListener('change', () => {
   start()
 })
 
-cards.forEach(draw)
+setOutfit(outfit)
 start()
